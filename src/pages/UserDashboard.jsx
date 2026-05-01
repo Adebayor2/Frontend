@@ -27,7 +27,7 @@ const UserDashboard = () => {
     useEffect(() => {
         let token = localStorage.token
         
-        let url = "http://localhost:5255/api/dashboard"
+        let url = "https://backend-uma6.onrender.com/api/dashboard"
         axios.get(url,{
             headers:{
                 "Authorization": `Bearer ${token}`,

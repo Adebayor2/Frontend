@@ -19,6 +19,34 @@ import {
 } from 'lucide-react';
 
 const AdminDashboard = () => {
+
+     let navigate = useNavigate()
+      useEffect(() => {
+          let token = localStorage.token
+          
+          let url = "https://backend-uma6.onrender.com/api/admin/dashboard"
+          axios.get(url,{
+              headers:{
+                  "Authorization": `Bearer ${token}`,
+                  "Content-Type": "application/json",
+                  "Accept": "application/json"
+              }
+          })
+          .then((res)=>{
+              console.log(res.data.message);
+          })
+          .catch((err)=>{
+              if(err.response && err.response.status === 401){
+                  localStorage.removeItem('token')
+                  navigate("/signin")
+              }
+              console.error("Error:",err.response?err.response.data:err);
+          })
+      }, [navigate])
+
+
+
+
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   return (
