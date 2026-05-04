@@ -24,7 +24,7 @@ const UserProfilePage = () => {
       try {
            let token = localStorage.getItem('token');
            
-        let res = await axios.get('http://localhost:5255/api/profile' ,{
+        let res = await axios.get('https://backend-uma6.onrender.com/api/profile' ,{
             headers:{
                 "Authorization": `Bearer ${token}`,
                 "Content-Type": "application/json",

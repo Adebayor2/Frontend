@@ -77,8 +77,8 @@ const stockBadge = (stock) => {
       try {
         const token = localStorage.getItem('token');
         const [prodRes, catRes] = await Promise.all([
-          axios.get('http://localhost:5255/api/products', { headers: { Authorization: `Bearer ${token}` } }),
-          axios.get('http://localhost:5255/api/categories', { headers: { Authorization: `Bearer ${token}` } })
+          axios.get('https://backend-uma6.onrender.com/api/products', { headers: { Authorization: `Bearer ${token}` } }),
+          axios.get('https://backend-uma6.onrender.com/api/categories', { headers: { Authorization: `Bearer ${token}` } })
         ]);
         setProducts(prodRes.data);
         setCategories(catRes.data);
@@ -99,7 +99,7 @@ const stockBadge = (stock) => {
     try {
       const token = localStorage.getItem('token');
       // Decrement stock in the backend
-      const res = await axios.patch(`http://localhost:5255/api/products/${product._id}`, 
+      const res = await axios.patch(`https://backend-uma6.onrender.com/api/products/${product._id}`, 
         { stock: product.stock - 1 },
         { headers: { Authorization: `Bearer ${token}` } }
       );

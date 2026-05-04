@@ -21,7 +21,7 @@ const Signup = () => {
       console.log(values);
       setApiError('');
       setIsSubmitting(true);
-      axios.post('http://localhost:5255/api/register', values)
+      axios.post('https://backend-uma6.onrender.com/api/register', values)
       .then((response) => {
         console.log('signup success',response);
         navigate('/signin')

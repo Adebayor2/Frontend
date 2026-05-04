@@ -14,7 +14,7 @@ const AdminUsers = () => {
     const fetchUsers = async () => {
       try {
         const token = localStorage.getItem('token');
-        const response = await axios.get('http://localhost:5255/api/admin/allusers', {
+        const response = await axios.get('https://backend-uma6.onrender.com/api/admin/allusers', {
           headers: {
             "Authorization": `Bearer ${token}`,
             "Content-Type": "application/json",

@@ -54,10 +54,10 @@ const AdminProducts = () => {
 
       console.log("Fetching products and categories...");
       const [prodRes, catRes] = await Promise.all([
-        axios.get('http://localhost:5255/api/products', { 
+        axios.get('https://backend-uma6.onrender.com/api/products', { 
           headers: { Authorization: `Bearer ${token}` } 
         }),
-        axios.get('http://localhost:5255/api/categories', { 
+        axios.get('https://backend-uma6.onrender.com/api/categories', { 
           headers: { Authorization: `Bearer ${token}` } 
         })
       ]);
@@ -129,12 +129,12 @@ const AdminProducts = () => {
       const payload = { ...form, price: Number(form.price), stock: Number(form.stock) };
       
       if (editId) {
-        const res = await axios.patch(`http://localhost:5255/api/products/${editId}`, payload, {
+        const res = await axios.patch(`https://backend-uma6.onrender.com/api/products/${editId}`, payload, {
           headers: { Authorization: `Bearer ${token}` }
         });
         setProducts(products.map(p => p._id === editId ? res.data : p));
       } else {
-        const res = await axios.post('http://localhost:5255/api/products', payload, {
+        const res = await axios.post('https://backend-uma6.onrender.com/api/products', payload, {
           headers: { Authorization: `Bearer ${token}` }
         });
         setProducts([res.data, ...products]);
@@ -149,7 +149,7 @@ const AdminProducts = () => {
   const handleDelete = async (id) => {
     try {
       const token = localStorage.getItem('token');
-      await axios.delete(`http://localhost:5255/api/products/${id}`, {
+      await axios.delete(`https://backend-uma6.onrender.com/api/products/${id}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       setProducts(products.filter(p => p._id !== id));

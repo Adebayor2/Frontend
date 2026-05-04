@@ -24,7 +24,7 @@ const AdminCategories = () => {
   const fetchCategories = async () => {
     try {
       const token = localStorage.getItem('token');
-      const response = await axios.get('http://localhost:5255/api/categories', {
+      const response = await axios.get('https://backend-uma6.onrender.com/api/categories', {
         headers: { "Authorization": `Bearer ${token}` }
       });
       setCategories(response.data);
@@ -44,7 +44,7 @@ const AdminCategories = () => {
     setError('');
     try {
       const token = localStorage.getItem('token');
-      const response = await axios.post('http://localhost:5255/api/categories', formData, {
+      const response = await axios.post('https://backend-uma6.onrender.com/api/categories', formData, {
         headers: { "Authorization": `Bearer ${token}` }
       });
       setCategories([response.data, ...categories]);
@@ -62,7 +62,7 @@ const AdminCategories = () => {
     
     try {
       const token = localStorage.getItem('token');
-      await axios.delete(`http://localhost:5255/api/categories/${id}`, {
+      await axios.delete(`https://backend-uma6.onrender.com/api/categories/${id}`, {
         headers: { "Authorization": `Bearer ${token}` }
       });
       setCategories(categories.filter(cat => cat._id !== id));

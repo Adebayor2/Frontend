@@ -26,7 +26,7 @@ const AdminDashboard = () => {
       useEffect(() => {
           let token = localStorage.token
           
-          let url = "http://localhost:5255/api/admin/dashboard"
+          let url = "https://backend-uma6.onrender.com/api/admin/dashboard"
           axios.get(url,{
               headers:{
                   "Authorization": `Bearer ${token}`,

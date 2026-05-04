@@ -18,7 +18,7 @@ const UserEditProfile = () => {
     const fetchProfile = async () => {
       try {
         let token = localStorage.getItem('token');
-        let res = await axios.get('http://localhost:5255/api/profile', {
+        let res = await axios.get('https://backend-uma6.onrender.com/api/profile', {
           headers:{
             "Authorization": `Bearer ${token}`,
             "Content-Type": "application/json",
@@ -62,7 +62,7 @@ const UserEditProfile = () => {
   const handleSubmit = (e) => {
     e.preventDefault(); 
         let token = localStorage.getItem('token');
-    axios.patch('http://localhost:5255/api/updateuser/profile', profileData, { 
+    axios.patch('https://backend-uma6.onrender.com/api/updateuser/profile', profileData, { 
       headers:{
         "Authorization": `Bearer ${token}`,
         "Content-Type": "application/json",
