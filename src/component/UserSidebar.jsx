@@ -6,14 +6,23 @@ import {
   X,
   LogOut
 } from 'lucide-react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 
 const UserSidebar = ({ isOpen, toggleSidebar }) => {
   const location = useLocation();
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    localStorage.removeItem('role');
+    navigate('/signin');
+  };
 
   const isActive = (path) => {
     return location.pathname === path;
   };
+  
+      
 
   return (
     <div className={`fixed top-0 left-0 w-64 h-full bg-[#092A1A] flex flex-col text-white z-50 transition-transform duration-300 ease-in-out ${isOpen ? 'translate-x-0' : '-translate-x-full'} lg:translate-x-0 lg:transition-none`}>
@@ -61,14 +70,18 @@ const UserSidebar = ({ isOpen, toggleSidebar }) => {
 
       {/* Profile Info & Logout */}
       <div className="p-6 pb-8 border-t border-gray-700/50 flex flex-col gap-4">
-        <Link to='/user/profile' className={`flex items-center transition-colors ${isActive('/user/profile') ? 'text-white' : 'text-gray-400 hover:text-white'}`}>
+        <Link to='/user/profilePage' className={`flex items-center transition-colors ${isActive('/user/profile') ? 'text-white' : 'text-gray-400 hover:text-white'}`}>
           <UserCircle size={20} className="mr-4" />
           <span className="text-xs font-bold tracking-wider">PROFILE</span>
         </Link>
-        <Link to='/signin' className="flex items-center text-red-400 hover:text-red-300 transition-colors mt-2">
+        <button 
+
+          onClick={handleLogout}
+          className="flex items-center text-red-400 hover:text-red-300 transition-colors mt-2 w-full"
+        >
           <LogOut size={20} className="mr-4" />
           <span className="text-xs font-bold tracking-wider">LOGOUT</span>
-        </Link>
+        </button>
       </div>
     </div>
   );

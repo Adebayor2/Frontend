@@ -8,6 +8,7 @@ import { useNavigate } from 'react-router-dom';
 const Signup = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [apiError, setApiError] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const navigate = useNavigate()
   const formik = useFormik({
     initialValues:{
@@ -19,7 +20,8 @@ const Signup = () => {
     onSubmit: (values) =>{
       console.log(values);
       setApiError('');
-      axios.post('https://backend-uma6.onrender.com/api/register', values)
+      setIsSubmitting(true);
+      axios.post('http://localhost:5255/api/register', values)
       .then((response) => {
         console.log('signup success',response);
         navigate('/signin')
@@ -27,6 +29,9 @@ const Signup = () => {
       .catch((error) => {
         console.log('error signing up ' , error);
         setApiError(error.response?.data?.message || "An error occurred during signup. Please try again.");
+      })
+      .finally(() => {
+        setIsSubmitting(false);
       })
     },
              validationSchema: yup.object({
@@ -189,12 +194,11 @@ const Signup = () => {
 
               <div className="pt-2">
                 <button 
-                
                   type="submit"
-                  className="w-full bg-[#0A2E1A] text-white py-4 rounded-md font-bold text-sm tracking-wide hover:bg-[#072112] transition-colors shadow-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#0A2E1A]"
-                >Establish Ledger Account
-                
-                   
+                  disabled={isSubmitting}
+                  className="w-full bg-[#0A2E1A] text-white py-4 rounded-md font-bold text-sm tracking-wide hover:bg-[#072112] transition-colors shadow-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#0A2E1A] disabled:opacity-70 disabled:cursor-not-allowed"
+                >
+                  {isSubmitting ? 'Establishing...' : 'Establish Ledger Account'}
                 </button>
               </div>
             </form>

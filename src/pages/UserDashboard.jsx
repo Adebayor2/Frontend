@@ -20,14 +20,16 @@ import {
 
 
 const UserDashboard = () => {
+  const [user, setUser] = useState(null)
   
 
  
    let navigate = useNavigate()
     useEffect(() => {
         let token = localStorage.token
+      
         
-        let url = "https://backend-uma6.onrender.com/api/dashboard"
+        let url = "http://localhost:5255/api/dashboard"
         axios.get(url,{
             headers:{
                 "Authorization": `Bearer ${token}`,
@@ -36,8 +38,10 @@ const UserDashboard = () => {
             }
         })
         .then((res)=>{
-            console.log(res.data.message);
+          setUser(res.data.user)
+            console.log(res.data);
         })
+
         .catch((err)=>{
             if(err.response && err.response.status === 401){
                 localStorage.removeItem('token')
@@ -46,6 +50,7 @@ const UserDashboard = () => {
             console.error("Error:",err.response?err.response.data:err);
         })
     }, [navigate])
+
 
 
 
@@ -61,43 +66,52 @@ const stockBadge = (stock) => {
 
   const [isSidebarOpen, setIsSidebarOpen]   = useState(false);
   const [products, setProducts]             = useState([]);
+  const [categories, setCategories]         = useState([]);
+  const [loading, setLoading]               = useState(true);
   const [search, setSearch]                 = useState('');
   const [filterCat, setFilterCat]           = useState('All');
+  const [apiError, setApiError]             = useState('');
 
   useEffect(() => {
-    const savedProducts = localStorage.getItem('products');
-    if (savedProducts) {
-      setProducts(JSON.parse(savedProducts));
-    }
-  }, []);
-
-  const handleSell = (product) => {
-    if (product.stock <= 0) return;
-
-    // Update product stock
-    const updatedProducts = products.map((p) => {
-      if (p.id === product.id) {
-        return { ...p, stock: p.stock - 1 };
+    const fetchData = async () => {
+      try {
+        const token = localStorage.getItem('token');
+        const [prodRes, catRes] = await Promise.all([
+          axios.get('http://localhost:5255/api/products', { headers: { Authorization: `Bearer ${token}` } }),
+          axios.get('http://localhost:5255/api/categories', { headers: { Authorization: `Bearer ${token}` } })
+        ]);
+        setProducts(prodRes.data);
+        setCategories(catRes.data);
+      } catch (err) {
+        console.error("Error fetching store data:", err);
+        setApiError("Failed to load products from store.");
+      } finally {
+        setLoading(false);
       }
-      return p;
-    });
-
-    setProducts(updatedProducts);
-    localStorage.setItem('products', JSON.stringify(updatedProducts));
-
-    // Log the sale
-    const sale = {
-      id: Date.now(),
-      productId: product.id,
-      productName: product.name,
-      price: product.price,
-      date: new Date().toISOString(),
     };
 
-    const savedSales = localStorage.getItem('sales');
-    const sales = savedSales ? JSON.parse(savedSales) : [];
-    sales.push(sale);
-    localStorage.setItem('sales', JSON.stringify(sales));
+    fetchData();
+  }, []);
+
+  const handleSell = async (product) => {
+    if (product.stock <= 0) return;
+
+    try {
+      const token = localStorage.getItem('token');
+      // Decrement stock in the backend
+      const res = await axios.patch(`http://localhost:5255/api/products/${product._id}`, 
+        { stock: product.stock - 1 },
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      
+      // Update local state
+      setProducts(products.map(p => p._id === product._id ? res.data : p));
+      
+      // Optional: Log sale logic can be added here or in a separate Sales collection
+    } catch (err) {
+      console.error("Error processing sale:", err);
+      alert("Failed to process sale. Please try again.");
+    }
   };
 
   const filtered = products
@@ -143,6 +157,7 @@ const stockBadge = (stock) => {
         </div>
 
         <div className="px-4 lg:px-8 py-6">
+        {user &&  <p className="text-gray-500 text-xl font-semibold tracking-tight mb-6 ">welcome back <span className="text-[#0A2E1A] text-2xl font-bold">{user.firstName}</span></p>}
           <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-6">
             <div>
               <h1 className="text-2xl lg:text-3xl font-extrabold text-[#0A2E1A] tracking-tight flex items-center gap-3">
@@ -160,76 +175,89 @@ const stockBadge = (stock) => {
                 className="bg-transparent border-none outline-none text-sm text-gray-700 cursor-pointer"
               >
                 <option value="All">All Categories</option>
-                {CATEGORIES.map((c) => <option key={c} value={c}>{c}</option>)}
+                {categories.map((c) => <option key={c._id} value={c.name}>{c.name}</option>)}
               </select>
               <ChevronDown size={14} className="text-gray-400 flex-shrink-0" />
             </div>
           </div>
 
+          {apiError && (
+            <div className="bg-red-50 border-l-4 border-red-500 p-4 mb-6 rounded-r-xl">
+               <p className="text-sm text-red-700 font-medium">{apiError}</p>
+            </div>
+          )}
+
           {/* Product Table */}
           <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
             <div className="overflow-x-auto">
-              <table className="w-full min-w-[640px]">
-                <thead>
-                  <tr className="bg-[#092A1A] text-[#96D9C0]">
-                    <th className="text-left text-[10px] font-bold tracking-widest uppercase px-5 py-4">Product Name</th>
-                    <th className="text-left text-[10px] font-bold tracking-widest uppercase px-5 py-4">Category</th>
-                    <th className="text-right text-[10px] font-bold tracking-widest uppercase px-5 py-4">Price</th>
-                    <th className="text-left text-[10px] font-bold tracking-widest uppercase px-5 py-4">Stock</th>
-                    <th className="text-center text-[10px] font-bold tracking-widest uppercase px-5 py-4">Action</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-gray-50">
-                  {filtered.length === 0 ? (
-                    <tr>
-                      <td colSpan={5} className="text-center py-16 text-gray-400">
-                        <Package size={32} className="mx-auto mb-3 opacity-20" />
-                        <p className="text-sm font-semibold">No products available</p>
-                      </td>
+              {loading ? (
+                <div className="flex flex-col justify-center items-center h-64 gap-3">
+                  <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-[#092A1A]"></div>
+                  <p className="text-xs font-bold text-gray-400 uppercase tracking-widest">Updating Catalogue...</p>
+                </div>
+              ) : (
+                <table className="w-full min-w-[640px]">
+                  <thead>
+                    <tr className="bg-[#092A1A] text-[#96D9C0]">
+                      <th className="text-left text-[10px] font-bold tracking-widest uppercase px-5 py-4">Product Name</th>
+                      <th className="text-left text-[10px] font-bold tracking-widest uppercase px-5 py-4">Category</th>
+                      <th className="text-right text-[10px] font-bold tracking-widest uppercase px-5 py-4">Price</th>
+                      <th className="text-left text-[10px] font-bold tracking-widest uppercase px-5 py-4">Stock</th>
+                      <th className="text-center text-[10px] font-bold tracking-widest uppercase px-5 py-4">Action</th>
                     </tr>
-                  ) : (
-                    filtered.map((product) => (
-                      <tr key={product.id} className="hover:bg-[#f0f7f3] transition-colors bg-white">
-                        <td className="px-5 py-3.5">
-                          <div className="flex items-center gap-2 flex-wrap">
-                            <span className="text-sm font-semibold text-[#092A1A]">{product.name}</span>
-                            {product.tag && (
-                              <span className="text-[9px] font-bold px-2 py-0.5 rounded bg-[#092A1A] text-[#96D9C0]">{product.tag}</span>
-                            )}
-                          </div>
-                        </td>
-                        <td className="px-5 py-3.5">
-                          <span className="text-[10px] font-bold tracking-wider text-[#092A1A] bg-[#E6EBE8] px-2.5 py-1 rounded-full uppercase">
-                            {product.category}
-                          </span>
-                        </td>
-                        <td className="px-5 py-3.5 text-right">
-                          <span className="text-sm font-extrabold text-[#092A1A]">${product.price.toLocaleString()}</span>
-                        </td>
-                        <td className="px-5 py-3.5">
-                          {stockBadge(product.stock)}
-                        </td>
-                        <td className="px-5 py-3.5">
-                          <div className="flex justify-center">
-                            <button
-                              onClick={() => handleSell(product)}
-                              disabled={product.stock === 0}
-                              className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-bold transition-colors ${
-                                product.stock > 0 
-                                  ? 'bg-[#092A1A] text-[#96D9C0] hover:bg-[#0d3d22] shadow-sm' 
-                                  : 'bg-gray-100 text-gray-400 cursor-not-allowed'
-                              }`}
-                            >
-                              <ShoppingCart size={16} />
-                              {product.stock > 0 ? 'Sell' : 'Sold Out'}
-                            </button>
-                          </div>
+                  </thead>
+                  <tbody className="divide-y divide-gray-50">
+                    {filtered.length === 0 ? (
+                      <tr>
+                        <td colSpan={5} className="text-center py-16 text-gray-400">
+                          <Package size={32} className="mx-auto mb-3 opacity-20" />
+                          <p className="text-sm font-semibold">No products available</p>
                         </td>
                       </tr>
-                    ))
-                  )}
-                </tbody>
-              </table>
+                    ) : (
+                      filtered.map((product) => (
+                        <tr key={product._id} className="hover:bg-[#f0f7f3] transition-colors bg-white">
+                          <td className="px-5 py-3.5">
+                            <div className="flex items-center gap-2 flex-wrap">
+                              <span className="text-sm font-semibold text-[#092A1A]">{product.name}</span>
+                              {product.tag && (
+                                <span className="text-[9px] font-bold px-2 py-0.5 rounded bg-[#092A1A] text-[#96D9C0]">{product.tag}</span>
+                              )}
+                            </div>
+                          </td>
+                          <td className="px-5 py-3.5">
+                            <span className="text-[10px] font-bold tracking-wider text-[#092A1A] bg-[#E6EBE8] px-2.5 py-1 rounded-full uppercase">
+                              {product.category}
+                            </span>
+                          </td>
+                          <td className="px-5 py-3.5 text-right">
+                            <span className="text-sm font-extrabold text-[#092A1A]">${product.price.toLocaleString()}</span>
+                          </td>
+                          <td className="px-5 py-3.5">
+                            {stockBadge(product.stock)}
+                          </td>
+                          <td className="px-5 py-3.5">
+                            <div className="flex justify-center">
+                              <button
+                                onClick={() => handleSell(product)}
+                                disabled={product.stock === 0}
+                                className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-bold transition-colors ${
+                                  product.stock > 0 
+                                    ? 'bg-[#092A1A] text-[#96D9C0] hover:bg-[#0d3d22] shadow-sm' 
+                                    : 'bg-gray-100 text-gray-400 cursor-not-allowed'
+                                }`}
+                              >
+                                <ShoppingCart size={16} />
+                                {product.stock > 0 ? 'Sell' : 'Sold Out'}
+                              </button>
+                            </div>
+                          </td>
+                        </tr>
+                      ))
+                    )}
+                  </tbody>
+                </table>
+              )}
             </div>
           </div>
         </div>

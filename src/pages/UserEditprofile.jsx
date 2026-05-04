@@ -3,7 +3,7 @@ import UserSidebar from '../component/UserSidebar';
 import { Menu, UserCircle, Mail, MapPin, Phone, Save, Shield } from 'lucide-react';
 import axios from 'axios';
 
-const UserProfile = () => {
+const UserEditProfile = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [loading, setLoading] = useState(true);
   const [profileData, setProfileData] = useState({
@@ -17,17 +17,25 @@ const UserProfile = () => {
   useEffect(() => {
     const fetchProfile = async () => {
       try {
-        const res = await axios.get('http://localhost:5000/profile', { withCredentials: true });
+        let token = localStorage.getItem('token');
+        let res = await axios.get('http://localhost:5255/api/profile', {
+          headers:{
+            "Authorization": `Bearer ${token}`,
+            "Content-Type": "application/json",
+            "Accept": "application/json"
+          }
+        });
         if (res.status === 200) {
           setProfileData(prev => ({
             ...prev,
-            firstName: res.data.firstName,
-            lastName: res.data.lastName,
-            email: res.data.email
+            firstName: res.data.user.firstName,
+            lastName: res.data.user.lastName,
+            email: res.data.user.email,
+            role: res.data.user.role
           }));
         }
       } catch (error) {
-        console.error("Failed to fetch profile from backend, using defaults/local storage");
+        console.error("Failed to fetch profile from backend ", error);
         setProfileData({
           firstName: '',
           lastName: '',
@@ -50,10 +58,26 @@ const UserProfile = () => {
     });
   };
 
+  
   const handleSubmit = (e) => {
-    e.preventDefault();
-    alert('Profile updated successfully!');
-    // Ideally, send a PUT request to the backend here
+    e.preventDefault(); 
+        let token = localStorage.getItem('token');
+    axios.patch('http://localhost:5255/api/updateuser/profile', profileData, { 
+      headers:{
+        "Authorization": `Bearer ${token}`,
+        "Content-Type": "application/json",
+        "Accept": "application/json"
+      } })
+    .then(response => {
+      console.log('Profile updated successfully:', response);
+      alert('Profile updated successfully!');
+    })
+    .catch(error => {
+      console.error('Error updating profile:', error);
+      alert('Error updating profile');
+    });
+
+
   };
 
   return (
@@ -194,4 +218,4 @@ const UserProfile = () => {
   );
 };
 
-export default UserProfile;
+export default UserEditProfile;

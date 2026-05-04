@@ -1,4 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 import AdminSidebar from '../component/AdminSidebar';
 import { 
   Menu,
@@ -24,7 +26,7 @@ const AdminDashboard = () => {
       useEffect(() => {
           let token = localStorage.token
           
-          let url = "https://backend-uma6.onrender.com/api/admin/dashboard"
+          let url = "http://localhost:5255/api/admin/dashboard"
           axios.get(url,{
               headers:{
                   "Authorization": `Bearer ${token}`,
@@ -33,7 +35,7 @@ const AdminDashboard = () => {
               }
           })
           .then((res)=>{
-              console.log(res.data.message);
+              console.log(res.data);
           })
           .catch((err)=>{
               if(err.response && err.response.status === 401){
@@ -44,13 +46,14 @@ const AdminDashboard = () => {
           })
       }, [navigate])
 
+   
 
 
 
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   return (
-    <div className="flex min-h-screen bg-[#E6EBE8]font-sans">
+    <div className="flex min-h-screen bg-[#E6EBE8] font-sans">
       {/* Mobile Overlay */}
       {isSidebarOpen && (
         <div 

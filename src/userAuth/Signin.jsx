@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useFormik } from 'formik'
 import * as yup from 'yup'
 import axios from 'axios'
-import { useNavigate } from 'react-router-dom'
 
 const Signin = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [apiError, setApiError] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const navigate = useNavigate()
 
   const formik = useFormik({
@@ -21,10 +21,12 @@ const Signin = () => {
     }),
     onSubmit: (values) => {
         setApiError('');
-        axios.post('https://backend-uma6.onrender.com/api/login', values)
+        setIsSubmitting(true);
+        axios.post('http://localhost:5255/api/login', values)
             .then(response => {
                 if (response.data.message === "Login successful") {
                     localStorage.token = response.data.token 
+
                     localStorage.role = response.data.role
                     if(localStorage.role === 'admin'){
                       navigate("/admin/dashboard")
@@ -41,7 +43,10 @@ const Signin = () => {
             })
             .catch(error => {
                 console.error('Error logging in:', error)
-                setApiError("Invalid email or password")
+                setApiError(String(error.response?.data?.message || "Invalid email or password"))
+            })
+            .finally(() => {
+                setIsSubmitting(false);
             })
     }
   })
@@ -51,7 +56,7 @@ const Signin = () => {
     <div className="min-h-screen flex flex-col md:flex-row bg-white font-sans text-gray-900 selection:bg-green-100  ">
       
       {/* Left Panel - Hero Branding */}
-      <div className="w-full md:w-1/2 bg-[#092515] text-white p-8 md:p-12 lg:p-20 flex flex-col justify-between relative overflow-hidden min-h-[40vh] md:min-h-screen hidden lg:block ">
+      <div className="w-full md:w-1/2 bg-[#092515] text-white p-8 md:p-12 lg:p-20 flex flex-col justify-between relative overflow-hidden min-h-[40vh] md:min-h-screen hidden md:flex ">
         <div className="relative z-20 ">
         
           <Link to="/"
@@ -61,7 +66,7 @@ const Signin = () => {
                 <path d="M4 10v7h3v-7H4zm6 0v7h3v-7h-3zM2 22h19v-3H2v3zm14-12v7h3v-7h-3zm-4.5-9L2 6v2h19V6l-9.5-5z" />
               </svg>
             </div>
-            <span className="text-l font-bold tracking-tight mb-5">STOCK MANAGER</span>
+            <span className="text-lg font-bold tracking-tight mb-5">STOCK MANAGER</span>
           </Link>
         </div>
 
@@ -86,12 +91,12 @@ const Signin = () => {
       </div>
 
       <div className="w-full md:w-1/2 bg-white flex flex-col pt-20  relative pb-8 px-6 md:px-12 lg:px-20 h-full min-h-[60vh] md:min-h-screen overflow-y-auto  ">
-              <Link to="/" className="text-xl font-bold  text-[#0A2E1A]-tracking-tight hover:opacity-80 transition cursor-pointer mx-auto lg:hidden md:block" >
+              <Link to="/" className="text-xl font-bold text-[#0A2E1A] tracking-tight hover:opacity-80 transition cursor-pointer mx-auto lg:hidden md:block" >
                     STOCK MANAGER
                   </Link>
         <div className="flex-1 flex flex-col justify-center max-w-md w-full ">
           <div className="mb-10">
-            <h2 className=" font-bold  mb-2 tracking-tight">Welcome Back</h2>
+            <h2 className="text-2xl font-bold mb-2 tracking-tight text-gray-900">Welcome Back</h2>
             <p className="text-sm text-gray-500 font-medium">Please enter your credentials to access the ledger.</p>
           </div>
 
@@ -176,9 +181,10 @@ const Signin = () => {
             <div className="pt-2">
               <button 
                 type="submit"
-                className="w-full bg-[#092515] text-white py-3.5 rounded-md font-bold text-[14px] hover:bg-[#061c0f] transition-colors shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#092515]"
+                disabled={isSubmitting}
+                className="w-full bg-[#092515] text-white py-3.5 rounded-md font-bold text-[14px] hover:bg-[#061c0f] transition-colors shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#092515] disabled:opacity-70 disabled:cursor-not-allowed"
               >
-                Sign In 
+                {isSubmitting ? 'Signing In...' : 'Sign In'}
               </button>
             </div>
             
