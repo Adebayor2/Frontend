@@ -104,10 +104,10 @@ const stockBadge = (stock) => {
         { headers: { Authorization: `Bearer ${token}` } }
       );
       
-      // Update local state
+    
       setProducts(products.map(p => p._id === product._id ? res.data : p));
       
-      // Optional: Log sale logic can be added here or in a separate Sales collection
+      
     } catch (err) {
       console.error("Error processing sale:", err);
       alert("Failed to process sale. Please try again.");
