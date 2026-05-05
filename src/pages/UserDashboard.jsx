@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import UserSidebar from '../component/UserSidebar';
 import { useNavigate } from "react-router-dom"
 import axios from "axios"
+import API_BASE_URL from '../config/apiConfig';
 import {
   Menu,
   Search,
@@ -26,10 +27,10 @@ const UserDashboard = () => {
  
    let navigate = useNavigate()
     useEffect(() => {
-        let token = localStorage.token
+        let token = localStorage.getItem('token');
       
         
-        let url = "http://localhost:5255/api/dashboard"
+        let url = `${API_BASE_URL}/dashboard`
         axios.get(url,{
             headers:{
                 "Authorization": `Bearer ${token}`,
@@ -77,8 +78,8 @@ const stockBadge = (stock) => {
       try {
         const token = localStorage.getItem('token');
         const [prodRes, catRes] = await Promise.all([
-          axios.get('https://backend-uma6.onrender.com/api/products', { headers: { Authorization: `Bearer ${token}` } }),
-          axios.get('https://backend-uma6.onrender.com/api/categories', { headers: { Authorization: `Bearer ${token}` } })
+          axios.get(`${API_BASE_URL}/products`, { headers: { Authorization: `Bearer ${token}` } }),
+          axios.get(`${API_BASE_URL}/categories`, { headers: { Authorization: `Bearer ${token}` } })
         ]);
         setProducts(prodRes.data);
         setCategories(catRes.data);
@@ -99,7 +100,7 @@ const stockBadge = (stock) => {
     try {
       const token = localStorage.getItem('token');
       // Decrement stock in the backend
-      const res = await axios.patch(`https://backend-uma6.onrender.com/api/products/${product._id}`, 
+      const res = await axios.patch(`${API_BASE_URL}/products/${product._id}`, 
         { stock: product.stock - 1 },
         { headers: { Authorization: `Bearer ${token}` } }
       );

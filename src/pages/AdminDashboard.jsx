@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import API_BASE_URL from '../config/apiConfig';
 import AdminSidebar from '../component/AdminSidebar';
 import { 
   Menu,
@@ -24,9 +25,9 @@ const AdminDashboard = () => {
 
      let navigate = useNavigate()
       useEffect(() => {
-          let token = localStorage.token
+          let token = localStorage.getItem('token');
           
-          let url = "https://backend-uma6.onrender.com/api/admin/dashboard"
+          let url = `${API_BASE_URL}/admin/dashboard`
           axios.get(url,{
               headers:{
                   "Authorization": `Bearer ${token}`,

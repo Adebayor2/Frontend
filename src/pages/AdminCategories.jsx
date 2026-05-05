@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import AdminSidebar from '../component/AdminSidebar';
 import { Menu, Plus, Shapes, Trash2, Edit2, Search, X, Check, Package, Info, AlertCircle } from 'lucide-react';
 import axios from 'axios';
+import API_BASE_URL from '../config/apiConfig';
 
 const AdminCategories = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -24,7 +25,7 @@ const AdminCategories = () => {
   const fetchCategories = async () => {
     try {
       const token = localStorage.getItem('token');
-      const response = await axios.get('https://backend-uma6.onrender.com/api/categories', {
+      const response = await axios.get(`${API_BASE_URL}/categories`, {
         headers: { "Authorization": `Bearer ${token}` }
       });
       setCategories(response.data);
@@ -44,7 +45,7 @@ const AdminCategories = () => {
     setError('');
     try {
       const token = localStorage.getItem('token');
-      const response = await axios.post('https://backend-uma6.onrender.com/api/categories', formData, {
+      const response = await axios.post(`${API_BASE_URL}/categories`, formData, {
         headers: { "Authorization": `Bearer ${token}` }
       });
       setCategories([response.data, ...categories]);
@@ -62,7 +63,7 @@ const AdminCategories = () => {
     
     try {
       const token = localStorage.getItem('token');
-      await axios.delete(`https://backend-uma6.onrender.com/api/categories/${id}`, {
+      await axios.delete(`${API_BASE_URL}/categories/${id}`, {
         headers: { "Authorization": `Bearer ${token}` }
       });
       setCategories(categories.filter(cat => cat._id !== id));

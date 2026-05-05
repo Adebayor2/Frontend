@@ -3,6 +3,7 @@ import AdminSidebar from '../component/AdminSidebar';
 import { Menu, UserCircle, Mail, Phone, MapPin, Save, Shield, ArrowLeft, Camera } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import API_BASE_URL from '../config/apiConfig';
 
 const AdminEditProfile = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -23,7 +24,7 @@ const AdminEditProfile = () => {
     const fetchProfile = async () => {
       try {
         let token = localStorage.getItem('token');
-        let res = await axios.get('https://backend-uma6.onrender.com/api/profile', {
+        let res = await axios.get(`${API_BASE_URL}/profile`, {
           headers: {
             "Authorization": `Bearer ${token}`,
             "Content-Type": "application/json",
@@ -64,7 +65,7 @@ const AdminEditProfile = () => {
     setIsSaving(true);
     try {
       let token = localStorage.getItem('token');
-      const response = await axios.patch('http://localhost:5255/api/updateuser/profile', profileData, {
+      const response = await axios.patch(`${API_BASE_URL}/updateuser/profile`, profileData, {
         headers: {
           "Authorization": `Bearer ${token}`,
           "Content-Type": "application/json",

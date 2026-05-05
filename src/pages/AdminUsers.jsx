@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import AdminSidebar from '../component/AdminSidebar';
 import { Menu, Users, Search, Mail, Shield, MoreVertical, Trash2, Edit, ChevronRight, UserCircle } from 'lucide-react';
 import axios from 'axios';
+import API_BASE_URL from '../config/apiConfig';
 
 const AdminUsers = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -14,7 +15,7 @@ const AdminUsers = () => {
     const fetchUsers = async () => {
       try {
         const token = localStorage.getItem('token');
-        const response = await axios.get('https://backend-uma6.onrender.com/api/admin/allusers', {
+        const response = await axios.get(`${API_BASE_URL}/admin/allusers`, {
           headers: {
             "Authorization": `Bearer ${token}`,
             "Content-Type": "application/json",

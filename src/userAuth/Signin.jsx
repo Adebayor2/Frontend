@@ -2,7 +2,8 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useFormik } from 'formik'
 import * as yup from 'yup'
-import axios from 'axios'
+import axios from 'axios';
+import API_BASE_URL from '../config/apiConfig';
 
 const Signin = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -22,34 +23,37 @@ const Signin = () => {
     onSubmit: (values) => {
         setApiError('');
         setIsSubmitting(true);
-        axios.post('https://backend-uma6.onrender.com/api/login', values)
+        axios.post(`${API_BASE_URL}/login`, values)
             .then(response => {
                 if (response.data.message === "Login successful") {
-                    localStorage.token = response.data.token 
+                    localStorage.setItem('token', response.data.token);
+                    localStorage.setItem('role', response.data.role);
+                 
 
-                    localStorage.role = response.data.role
-                    if(localStorage.role === 'admin'){
-                      navigate("/admin/dashboard")
-                    }
-                    else{
-                       navigate("/user/dashboard")
+                    if (response.data.role === 'admin') {
+                        navigate('/admin/dashboard');
+                    } else {
+                        navigate('/user/dashboard');
                     }
                 }
                 else{
                     setApiError(response.data.message || "Invalid credentials")
-              
                 }
               
             })
-            .catch(error => {
-                console.error('Error logging in:', error)
-                setApiError(String(error.response?.data?.message || 'Error logging in '))
+            .catch((error) => {
+                console.error('Login error detail:', error);
+                const backendError = error.response?.data?.error;
+                const msg = backendError || error.response?.data?.message || error.message || 'Error logging in';
+                setApiError(String(msg));
             })
             .finally(() => {
                 setIsSubmitting(false);
             })
     }
   })
+
+
 
 
   return (

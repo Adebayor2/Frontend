@@ -14,6 +14,7 @@ import {
   SlidersHorizontal,
 } from 'lucide-react';
 import axios from 'axios';
+import API_BASE_URL from '../config/apiConfig';
 
 const stockBadge = (stock) => {
   if (stock === 0)    return <span className="text-[10px] font-bold text-red-500 bg-red-50 px-2.5 py-1 rounded-full">Out of Stock</span>;
@@ -54,10 +55,10 @@ const AdminProducts = () => {
 
       console.log("Fetching products and categories...");
       const [prodRes, catRes] = await Promise.all([
-        axios.get('https://backend-uma6.onrender.com/api/products', { 
+        axios.get(`${API_BASE_URL}/products`, { 
           headers: { Authorization: `Bearer ${token}` } 
         }),
-        axios.get('https://backend-uma6.onrender.com/api/categories', { 
+        axios.get(`${API_BASE_URL}/categories`, { 
           headers: { Authorization: `Bearer ${token}` } 
         })
       ]);
@@ -129,12 +130,12 @@ const AdminProducts = () => {
       const payload = { ...form, price: Number(form.price), stock: Number(form.stock) };
       
       if (editId) {
-        const res = await axios.patch(`https://backend-uma6.onrender.com/api/products/${editId}`, payload, {
+        const res = await axios.patch(`${API_BASE_URL}/products/${editId}`, payload, {
           headers: { Authorization: `Bearer ${token}` }
         });
         setProducts(products.map(p => p._id === editId ? res.data : p));
       } else {
-        const res = await axios.post('https://backend-uma6.onrender.com/api/products', payload, {
+        const res = await axios.post(`${API_BASE_URL}/products`, payload, {
           headers: { Authorization: `Bearer ${token}` }
         });
         setProducts([res.data, ...products]);
@@ -149,7 +150,7 @@ const AdminProducts = () => {
   const handleDelete = async (id) => {
     try {
       const token = localStorage.getItem('token');
-      await axios.delete(`https://backend-uma6.onrender.com/api/products/${id}`, {
+      await axios.delete(`${API_BASE_URL}/products/${id}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       setProducts(products.filter(p => p._id !== id));

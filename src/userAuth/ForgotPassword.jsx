@@ -4,6 +4,7 @@ import { useFormik } from 'formik';
 import * as yup from 'yup';
 import axios from 'axios';
 import { ArrowLeft, Mail, ShieldCheck, RefreshCcw } from 'lucide-react';
+import API_BASE_URL from '../config/apiConfig';
 
 const ForgotPassword = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -24,7 +25,7 @@ const ForgotPassword = () => {
 
       try {
         // Placeholder for API call
-        const response = await axios.post('http://localhost:5255/api/reset/password', values);
+        const response = await axios.post(`${API_BASE_URL}/forgotpassword`, values);
         setMessage(response.data.message || 'If an account exists with this email, you will receive a reset link shortly.');
       } catch (err) {
         setError(err.response?.data?.message || 'Something went wrong. Please try again.');

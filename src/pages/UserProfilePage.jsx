@@ -3,6 +3,7 @@ import UserSidebar from '../component/UserSidebar';
 import { Menu, UserCircle, Mail, Phone, MapPin, Calendar, Shield, Edit3, ArrowLeft } from 'lucide-react';
 import { useNavigate, Link } from 'react-router-dom';
 import axios from 'axios';
+import API_BASE_URL from '../config/apiConfig';
 
 const UserProfilePage = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -24,7 +25,7 @@ const UserProfilePage = () => {
       try {
            let token = localStorage.getItem('token');
            
-        let res = await axios.get('https://backend-uma6.onrender.com/api/profile' ,{
+        let res = await axios.get(`${API_BASE_URL}/profile` ,{
             headers:{
                 "Authorization": `Bearer ${token}`,
                 "Content-Type": "application/json",

@@ -4,6 +4,7 @@ import {useFormik} from 'formik'
 import * as yup from 'yup'
 import axios from 'axios'
 import { useNavigate } from 'react-router-dom';
+import API_BASE_URL from '../config/apiConfig';
 
 const Signup = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -21,7 +22,7 @@ const Signup = () => {
       console.log(values);
       setApiError('');
       setIsSubmitting(true);
-      axios.post('https://backend-uma6.onrender.com/api/register', values)
+      axios.post(`${API_BASE_URL}/register`, values)
       .then((response) => {
         console.log('signup success',response);
         navigate('/signin')

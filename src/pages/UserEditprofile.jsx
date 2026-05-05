@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import UserSidebar from '../component/UserSidebar';
 import { Menu, UserCircle, Mail, MapPin, Phone, Save, Shield } from 'lucide-react';
 import axios from 'axios';
+import API_BASE_URL from '../config/apiConfig';
 
 const UserEditProfile = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -18,7 +19,7 @@ const UserEditProfile = () => {
     const fetchProfile = async () => {
       try {
         let token = localStorage.getItem('token');
-        let res = await axios.get('https://backend-uma6.onrender.com/api/profile', {
+        let res = await axios.get(`${API_BASE_URL}/profile`, {
           headers:{
             "Authorization": `Bearer ${token}`,
             "Content-Type": "application/json",
@@ -62,7 +63,7 @@ const UserEditProfile = () => {
   const handleSubmit = (e) => {
     e.preventDefault(); 
         let token = localStorage.getItem('token');
-    axios.patch('https://backend-uma6.onrender.com/api/updateuser/profile', profileData, { 
+    axios.patch(`${API_BASE_URL}/updateuser/profile`, profileData, { 
       headers:{
         "Authorization": `Bearer ${token}`,
         "Content-Type": "application/json",
