@@ -196,7 +196,7 @@ const Signup = () => {
                 <button 
                   type="submit"
                   disabled={isSubmitting}
-                  className="w-full bg-[#0A2E1A] text-white py-4 rounded-md font-bold text-sm tracking-wide hover:bg-[#072112] transition-colors shadow-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#0A2E1A] disabled:opacity-70 disabled:cursor-not-allowed"
+                  className="w-full bg-[#0A2E1A] cursor-pointer text-white py-4 rounded-md font-bold text-sm tracking-wide hover:bg-[#072112] transition-colors shadow-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#0A2E1A] disabled:opacity-70 disabled:cursor-not-allowed"
                 >
                   {isSubmitting ? 'Establishing...' : 'Establish Ledger Account'}
                 </button>
@@ -232,7 +232,7 @@ const Signup = () => {
       <footer className="w-full bg-[#f4f5f4] py-8 px-6 mt-16 md:mt-24 border-t border-gray-200/50">
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
           <div className="text-[10px] font-bold tracking-[0.1em] text-gray-400 uppercase">
-            © 2024 ARCHITECT LEDGER. ALL RIGHTS RESERVED.
+            © 2026 STOCK MANAGER. ALL RIGHTS RESERVED.
           </div>
           <div className="flex gap-6 lg:gap-10 text-[10px] font-bold tracking-[0.1em] text-gray-400 uppercase">
             <Link to="#" className="hover:text-gray-900 transition-colors no-underline">PRIVACY POLICY</Link>

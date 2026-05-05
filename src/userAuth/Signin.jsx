@@ -43,7 +43,7 @@ const Signin = () => {
             })
             .catch(error => {
                 console.error('Error logging in:', error)
-                setApiError(String(error.response?.data?.message || "Invalid email or password"))
+                setApiError(String(error.response?.data?.message || 'Error logging in '))
             })
             .finally(() => {
                 setIsSubmitting(false);
@@ -182,7 +182,7 @@ const Signin = () => {
               <button 
                 type="submit"
                 disabled={isSubmitting}
-                className="w-full bg-[#092515] text-white py-3.5 rounded-md font-bold text-[14px] hover:bg-[#061c0f] transition-colors shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#092515] disabled:opacity-70 disabled:cursor-not-allowed"
+                className="w-full bg-[#092515] cursor-pointer text-white py-3.5 rounded-md font-bold text-[14px] hover:bg-[#061c0f] transition-colors shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#092515] disabled:opacity-70 disabled:cursor-not-allowed"
               >
                 {isSubmitting ? 'Signing In...' : 'Sign In'}
               </button>
