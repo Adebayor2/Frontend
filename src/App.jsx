@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import {  Routes, Route } from 'react-router-dom';
 import { Navigate } from "react-router-dom"
 import './App.css';
 import Landing from './pages/Landing';
@@ -33,7 +33,7 @@ const App = () => {
   };
   
   return (
-    <Router>
+    
       <Routes>
         <Route path="/" element={<Landing />} />
         <Route path="/signup" element={<Signup />} />
@@ -54,7 +54,7 @@ const App = () => {
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path='/*' element={<NotFound />} />
       </Routes>
-    </Router>
+  
   );
 };
 
