@@ -4,7 +4,8 @@ import {
   Wallet,
   UserCircle,
   X,
-  LogOut
+  LogOut,
+  Settings
 } from 'lucide-react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 
@@ -62,6 +63,14 @@ const UserSidebar = ({ isOpen, toggleSidebar }) => {
               <div className={`flex items-center px-6 py-3 transition-colors rounded-r-full mr-4 border-l-4 ${isActive('/user/revenue') ? 'bg-[#2c3344] border-gray-400 text-white' : 'text-gray-400 border-transparent hover:bg-[#2c3344] hover:text-white'}`}>
                 <Wallet size={18} className="mr-4" />
                 <span className="text-xs font-bold tracking-wider">MONTHLY REVENUE</span>
+              </div>
+            </li>
+          </Link>
+          <Link to='/user/settings'>
+            <li>
+              <div className={`flex items-center px-6 py-3 transition-colors rounded-r-full mr-4 border-l-4 ${isActive('/user/settings') ? 'bg-[#2c3344] border-gray-400 text-white' : 'text-gray-400 border-transparent hover:bg-[#2c3344] hover:text-white'}`}>
+                <Settings size={18} className="mr-4" />
+                <span className="text-xs font-bold tracking-wider">SETTINGS</span>
               </div>
             </li>
           </Link>

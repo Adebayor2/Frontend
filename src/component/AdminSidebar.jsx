@@ -9,7 +9,8 @@ import {
   UserCircle,
   X,
   LogOut,
-  Wallet
+  Wallet,
+  Settings
 } from 'lucide-react';
 
 
@@ -94,6 +95,12 @@ const AdminSidebar = ({ isOpen, toggleSidebar }) => {
             <Link to="/admin/users"  className={`flex items-center px-6 py-3 rounded-r-full mr-4 border-l-4 transition-colors ${isActive('/admin/users') ? 'bg-[#2c3344] border-gray-400 text-white' : 'text-gray-400 border-transparent hover:bg-[#2c3344] hover:text-white'}`}>
               <Users size={18} className={`mr-4 ${isActive('/admin/users') ? 'text-gray-300' : ''}`} />
               <span className="text-xs font-bold tracking-wider">USERS</span>
+            </Link>
+          </li>
+          <li>
+            <Link to="/admin/settings"  className={`flex items-center px-6 py-3 rounded-r-full mr-4 border-l-4 transition-colors ${isActive('/admin/settings') ? 'bg-[#2c3344] border-gray-400 text-white' : 'text-gray-400 border-transparent hover:bg-[#2c3344] hover:text-white'}`}>
+              <Settings size={18} className={`mr-4 ${isActive('/admin/settings') ? 'text-gray-300' : ''}`} />
+              <span className="text-xs font-bold tracking-wider">SETTINGS</span>
             </Link>
           </li>
         </ul>
