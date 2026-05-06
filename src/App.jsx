@@ -17,6 +17,7 @@ import AdminEditprofile from './pages/AdminEditprofile';
 import AdminUsers from './pages/AdminUsers';
 import AdminCategories from './pages/AdminCategories';
 import ForgotPassword from './userAuth/ForgotPassword';
+import ResetPassword from './userAuth/ResetPassword';
 import UserEditProfile from './pages/UserEditprofile';
 import Loader from './component/Loader';
 
@@ -62,6 +63,7 @@ const App = () => {
         <Route path="/user/profilePage" element={<UserRoute><UserProfilePage /></UserRoute>} />
         
         <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route path="/reset-password/:resetToken" element={<ResetPassword />} />
         <Route path='/*' element={<NotFound />} />
       </Routes>
   

@@ -65,7 +65,6 @@ const AdminDashboard = () => {
 
   return (
     <div className="flex min-h-screen bg-[#E6EBE8] font-sans">
-      {/* Mobile Overlay */}
       {isSidebarOpen && (
         <div 
           className="fixed inset-0 bg-black/50 z-40 lg:hidden"
@@ -214,7 +213,7 @@ const AdminDashboard = () => {
             
             <button 
               onClick={() => navigate('/admin/products')}
-              className="w-full text-center text-blue-600 font-bold text-xs tracking-wider pt-6 mt-4 hover:text-blue-700 uppercase"
+              className="w-full text-center cursor-pointer text-blue-600 font-bold text-xs tracking-wider pt-6 mt-4 hover:text-blue-700 uppercase"
             >
               RESTOCK NOW
             </button>

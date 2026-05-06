@@ -1,32 +1,35 @@
 import React, { useState, useEffect } from 'react';
 import UserSidebar from '../component/UserSidebar';
+import axios from 'axios';
+import API_BASE_URL from '../config/apiConfig';
 import { Menu, Wallet, TrendingUp, Calendar, DollarSign, Activity } from 'lucide-react';
 
 const UserRevenue = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  const [sales, setSales] = useState([]);
-  const [monthlyRevenue, setMonthlyRevenue] = useState(0);
+  const [stats, setStats] = useState({
+    monthlyRevenue: 0,
+    totalSales: 0,
+    averageOrderValue: 0,
+    recentSales: []
+  });
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const savedSales = localStorage.getItem('sales');
-    if (savedSales) {
-      const parsedSales = JSON.parse(savedSales);
-      setSales(parsedSales);
+    const fetchStats = async () => {
+      try {
+        const token = localStorage.getItem('token');
+        const res = await axios.get(`${API_BASE_URL}/sales/stats`, {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+        setStats(res.data);
+      } catch (err) {
+        console.error("Error fetching revenue stats:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
 
-      // Calculate current month revenue
-      const currentMonth = new Date().getMonth();
-      const currentYear = new Date().getFullYear();
-      
-      const revenue = parsedSales.reduce((total, sale) => {
-        const saleDate = new Date(sale.date);
-        if (saleDate.getMonth() === currentMonth && saleDate.getFullYear() === currentYear) {
-          return total + sale.price;
-        }
-        return total;
-      }, 0);
-
-      setMonthlyRevenue(revenue);
-    }
+    fetchStats();
   }, []);
 
   return (
@@ -70,7 +73,7 @@ const UserRevenue = () => {
               <div className="absolute -right-4 -top-4 w-24 h-24 bg-white/10 rounded-full blur-2xl group-hover:bg-white/20 transition-all"></div>
               <div className="flex justify-between items-start mb-4">
                 <div className="p-2 bg-white/10 rounded-lg">
-                  <DollarSign size={20} className="text-[#96D9C0]" />
+                   <DollarSign size={20} className="text-[#96D9C0]" />
                 </div>
                 <span className="text-xs font-bold text-[#96D9C0] bg-white/10 px-2 py-1 rounded-full flex items-center gap-1">
                   <Calendar size={12} /> This Month
@@ -78,7 +81,7 @@ const UserRevenue = () => {
               </div>
               <div>
                 <p className="text-sm font-semibold text-gray-300 mb-1">Monthly Revenue</p>
-                <h2 className="text-3xl font-extrabold text-white">${monthlyRevenue.toLocaleString()}</h2>
+                <h2 className="text-3xl font-extrabold text-white">${stats.monthlyRevenue.toLocaleString()}</h2>
               </div>
             </div>
 
@@ -90,20 +93,20 @@ const UserRevenue = () => {
               </div>
               <div>
                 <p className="text-sm font-semibold text-gray-500 mb-1">Total Sales</p>
-                <h2 className="text-3xl font-extrabold text-[#092A1A]">{sales.length}</h2>
+                <h2 className="text-3xl font-extrabold text-[#092A1A]">{stats.totalSales}</h2>
               </div>
             </div>
 
             <div className="bg-white border border-gray-200 rounded-2xl p-6 shadow-sm">
               <div className="flex justify-between items-start mb-4">
                 <div className="p-2 bg-blue-50 rounded-lg">
-                  <Activity size={20} className="text-blue-600" />
+                   <Activity size={20} className="text-blue-600" />
                 </div>
               </div>
               <div>
                 <p className="text-sm font-semibold text-gray-500 mb-1">Average Order Value</p>
                 <h2 className="text-3xl font-extrabold text-[#092A1A]">
-                  ${sales.length > 0 ? Math.round(sales.reduce((sum, s) => sum + s.price, 0) / sales.length).toLocaleString() : '0'}
+                  ${stats.averageOrderValue.toLocaleString()}
                 </h2>
               </div>
             </div>
@@ -124,15 +127,17 @@ const UserRevenue = () => {
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-50">
-                  {sales.length === 0 ? (
+                  {loading ? (
+                    <tr><td colSpan={3} className="px-6 py-8 text-center text-gray-400">Loading...</td></tr>
+                  ) : stats.recentSales.length === 0 ? (
                     <tr>
                       <td colSpan={3} className="px-6 py-8 text-center text-gray-500 text-sm">
                         No transactions recorded yet.
                       </td>
                     </tr>
                   ) : (
-                    [...sales].reverse().map((sale) => (
-                      <tr key={sale.id} className="hover:bg-gray-50 transition-colors">
+                    stats.recentSales.map((sale) => (
+                      <tr key={sale._id} className="hover:bg-gray-50 transition-colors">
                         <td className="px-6 py-4 text-sm text-gray-500 font-medium">
                           {new Date(sale.date).toLocaleDateString()} {new Date(sale.date).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}
                         </td>

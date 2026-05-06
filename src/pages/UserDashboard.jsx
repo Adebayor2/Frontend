@@ -98,19 +98,28 @@ const stockBadge = (stock) => {
 
     try {
       const token = localStorage.getItem('token');
-      // Decrement stock in the backend
-      const res = await axios.patch(`${API_BASE_URL}/products/${product._id}`, 
-        { stock: product.stock - 1 },
+      if (!token) {
+        alert("Session expired. Please sign in again.");
+        navigate("/signin");
+        return;
+      }
+      
+      // Record the sale in the backend
+      const res = await axios.post(`${API_BASE_URL}/sales`, 
+        { productId: product._id },
         { headers: { Authorization: `Bearer ${token}` } }
       );
       
-    
-      setProducts(products.map(p => p._id === product._id ? res.data : p));
-      
+      if (res.status === 201) {
+        // Update local product state with the returned product (which has updated stock)
+        setProducts(prevProducts => prevProducts.map(p => p._id === product._id ? res.data.product : p));
+        alert("Sale recorded successfully!");
+      }
       
     } catch (err) {
       console.error("Error processing sale:", err);
-      alert("Failed to process sale. Please try again.");
+      const errorMsg = err.response?.data?.message || "Failed to process sale. Please try again.";
+      alert(errorMsg);
     }
   };
 
