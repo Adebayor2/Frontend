@@ -1,6 +1,7 @@
 import React from 'react';
 import {  Routes, Route } from 'react-router-dom';
 import { Navigate } from "react-router-dom"
+import { useEffect, useState } from 'react';
 import './App.css';
 import Landing from './pages/Landing';
 import Signup from './userAuth/Signup';
@@ -17,15 +18,24 @@ import AdminUsers from './pages/AdminUsers';
 import AdminCategories from './pages/AdminCategories';
 import ForgotPassword from './userAuth/ForgotPassword';
 import UserEditProfile from './pages/UserEditprofile';
+import Loader from './component/Loader';
 
 
 
 const App = () => {
-  const token = localStorage.getItem('token');
-  const role = localStorage.getItem('role');
+  const [token, setToken] = useState(localStorage.getItem('token'));
+  const [role, setRole] = useState(localStorage.getItem('role'));
+
+  const updateAuth = () => {
+    setToken(localStorage.getItem('token'));
+    setRole(localStorage.getItem('role'));
+  };
 
   const AdminRoute = ({ children }) => {
-    return token && role === 'admin' ? children : <Navigate to="/signin" />;
+    if (!token || role !== 'admin') {
+      return <Navigate to="/signin" />;
+    }
+    return children;
   };
 
   const UserRoute = ({ children }) => {
@@ -37,7 +47,7 @@ const App = () => {
       <Routes>
         <Route path="/" element={<Landing />} />
         <Route path="/signup" element={<Signup />} />
-        <Route path="/signin" element={<Signin />} />
+        <Route path="/signin" element={<Signin updateAuth={updateAuth} />} />
         
         <Route path="/admin/dashboard" element={<AdminRoute><AdminDashboard /></AdminRoute>} />
         <Route path="/admin/products" element={<AdminRoute><AdminProducts /></AdminRoute>} />
