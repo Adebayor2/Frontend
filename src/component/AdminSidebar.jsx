@@ -8,7 +8,8 @@ import {
   Users, 
   UserCircle,
   X,
-  LogOut
+  LogOut,
+  Wallet
 } from 'lucide-react';
 
 
@@ -69,6 +70,12 @@ const AdminSidebar = ({ isOpen, toggleSidebar }) => {
             <Link to="/admin/categories"  className={`flex items-center px-6 py-3 rounded-r-full mr-4 border-l-4 transition-colors ${isActive('/admin/categories') ? 'bg-[#2c3344] border-gray-400 text-white' : 'text-gray-400 border-transparent hover:bg-[#2c3344] hover:text-white'}`}>
               <Shapes size={18} className={`mr-4 ${isActive('/admin/categories') ? 'text-gray-300' : ''}`} />
               <span className="text-xs font-bold tracking-wider">CATEGORIES</span>
+            </Link>
+          </li>
+          <li>
+            <Link to="/admin/revenue" className={`flex items-center px-6 py-3 rounded-r-full mr-4 border-l-4 transition-colors ${isActive('/admin/revenue') ? 'bg-[#2c3344] border-gray-400 text-white' : 'text-gray-400 border-transparent hover:bg-[#2c3344] hover:text-white'}`}>
+              <Wallet size={18} className={`mr-4 ${isActive('/admin/revenue') ? 'text-gray-300' : ''}`} />
+              <span className="text-xs font-bold tracking-wider">REVENUE</span>
             </Link>
           </li>
           <li>

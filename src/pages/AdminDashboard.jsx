@@ -30,6 +30,12 @@ const AdminDashboard = () => {
     totalStock: 0,
     lowStockProducts: []
   });
+  const [revenueStats, setRevenueStats] = useState({
+    monthlyRevenue: 0,
+    totalSales: 0,
+    totalRevenue: 0,
+    revenuePerUser: []
+  });
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -39,28 +45,31 @@ const AdminDashboard = () => {
       return;
     }
 
-    const url = `${API_BASE_URL}/admin/dashboard`;
-    axios.get(url, {
-      headers: {
-        "Authorization": `Bearer ${token}`,
-        "Content-Type": "application/json",
-        "Accept": "application/json"
+    const fetchDashboardData = async () => {
+      try {
+        const [dashRes, revRes] = await Promise.all([
+          axios.get(`${API_BASE_URL}/admin/dashboard`, {
+            headers: { Authorization: `Bearer ${token}` }
+          }),
+          axios.get(`${API_BASE_URL}/sales/admin/stats`, {
+            headers: { Authorization: `Bearer ${token}` }
+          })
+        ]);
+
+        if (dashRes.data.stats) setStats(dashRes.data.stats);
+        setRevenueStats(revRes.data);
+      } catch (err) {
+        console.error("Error fetching admin data:", err);
+        if (err.response && err.response.status === 401) {
+          localStorage.removeItem('token');
+          navigate("/signin");
+        }
+      } finally {
+        setLoading(false);
       }
-    })
-    .then((res) => {
-      if (res.data.stats) {
-        setStats(res.data.stats);
-      }
-      setLoading(false);
-    })
-    .catch((err) => {
-      if (err.response && err.response.status === 401) {
-        localStorage.removeItem('token');
-        navigate("/signin");
-      }
-      console.error("Error:", err.response ? err.response.data : err);
-      setLoading(false);
-    });
+    };
+
+    fetchDashboardData();
   }, [navigate]);
 
   return (
@@ -144,19 +153,19 @@ const AdminDashboard = () => {
             </div>
           </div>
 
-          {/* Card 3: Total Categories */}
-          <div className="relative overflow-hidden rounded-xl bg-[#96D9C0] text-white-900 p-6 shadow-sm flex flex-col justify-between">
-            <Menu size={80} className="absolute -bottom-2 -right-2 opacity-10 text-white-900" />
+          {/* Card 3: Monthly Revenue */}
+          <div className="relative overflow-hidden rounded-xl bg-[#0A2E1A] text-white p-6 shadow-sm flex flex-col justify-between">
+            <Banknote size={80} className="absolute -bottom-2 -right-2 opacity-20 text-white" />
             <div>
-              <div className="inline-flex bg-gray-900/10 p-2 rounded-lg mb-4">
-                <Menu size={20} className="text-white-900" />
+              <div className="inline-flex bg-white/20 p-2 rounded-lg mb-4">
+                <Banknote size={20} className="text-[#96D9C0]" />
               </div>
-              <p className="text-[10px] font-bold tracking-wider text-white-700 mb-1 uppercase">Categories</p>
-              <h2 className="text-3xl font-bold text-white-900">{stats.categoryCount}</h2>
+              <p className="text-[10px] font-bold tracking-wider text-green-100 mb-1 uppercase">Monthly Revenue</p>
+              <h2 className="text-3xl font-bold">${revenueStats.monthlyRevenue.toLocaleString()}</h2>
             </div>
-            <div className="inline-flex items-center bg-gray-900/10 rounded px-2 py-1 mt-4 max-w-fit">
-              <Zap size={12} className="mr-1" />
-              <span className="text-xs font-medium">Product groupings</span>
+            <div className="inline-flex items-center bg-white/20 rounded px-2 py-1 mt-4 max-w-fit">
+              <TrendingUp size={12} className="mr-1 text-[#96D9C0]" />
+              <span className="text-xs font-medium">Total earnings</span>
             </div>
           </div>
 
@@ -219,35 +228,43 @@ const AdminDashboard = () => {
             </button>
           </div>
 
-          {/* Top Performance Card (Keep as placeholder or update if data available) */}
+          {/* User Performance Breakdown */}
           <div className="bg-white rounded-xl shadow-[0_2px_10px_-3px_rgba(6,81,237,0.1)] p-6">
-            <h3 className="text-sm font-bold text-gray-800">Top Performance</h3>
-            <p className="text-xs text-gray-500 mt-1">Highest velocity asset this month</p>
+            <div className="flex justify-between items-center mb-6">
+              <h3 className="text-sm font-bold text-gray-800">Sales Personnel Performance</h3>
+              <Users size={18} className="text-blue-500" />
+            </div>
             
-            <div className="w-full h-36 bg-gradient-to-r from-gray-800 via-gray-900 to-black rounded-lg mt-5 shadow-inner relative overflow-hidden flex items-center justify-center">
-              <div className="w-[95%] h-[90%] bg-gradient-to-b from-gray-700 to-gray-800 rounded-sm border-2 border-gray-900 shadow-2xl relative">
-                  <div className="absolute inset-0 bg-white/5 bg-gradient-to-tr from-transparent to-white/10"></div>
-              </div>
+            <div className="space-y-4">
+              {revenueStats.revenuePerUser.length > 0 ? (
+                revenueStats.revenuePerUser.sort((a,b) => b.revenue - a.revenue).slice(0, 5).map((user, idx) => (
+                  <div key={idx} className="flex items-center justify-between p-2 hover:bg-gray-50 rounded-lg transition-colors">
+                    <div className="flex items-center gap-3">
+                      <div className="w-8 h-8 rounded-full bg-[#E6EBE8] flex items-center justify-center text-[10px] font-bold text-[#092A1A]">
+                        {user.name.split(' ').map(n => n[0]).join('')}
+                      </div>
+                      <div>
+                        <p className="text-xs font-bold text-[#092A1A]">{user.name}</p>
+                        <p className="text-[10px] text-gray-400 font-medium">{user.salesCount} sales</p>
+                      </div>
+                    </div>
+                    <span className="text-sm font-extrabold text-[#092A1A]">${user.revenue.toLocaleString()}</span>
+                  </div>
+                ))
+              ) : (
+                <div className="py-8 text-center">
+                  <p className="text-xs text-gray-400">No sales records found.</p>
+                </div>
+              )}
             </div>
-
-            <div className="flex justify-between items-start mt-4">
-              <div>
-                <h4 className="text-sm font-bold text-gray-800">Pro Series Monitor</h4>
-                <p className="text-xs text-gray-500 mt-0.5">Electronics / Displays</p>
-              </div>
-              <span className="bg-green-100 text-green-600 px-2.5 py-1 rounded-md text-[10px] font-bold">#1 Best Seller</span>
-            </div>
-
-            <div className="flex gap-4 mt-5">
-              <div className="flex-1 bg-[#f4f7fb] p-3.5 rounded-lg">
-                <p className="text-[10px] font-bold tracking-wider text-gray-500 mb-1 uppercase">Status</p>
-                <p className="text-xl font-bold text-gray-800">Elite</p>
-              </div>
-              <div className="flex-1 bg-[#f4f7fb] p-3.5 rounded-lg">
-                <p className="text-[10px] font-bold tracking-wider text-gray-500 mb-1 uppercase">Growth</p>
-                <p className="text-xl font-bold text-[#0f8245]">+18%</p>
-              </div>
-            </div>
+            
+            <button 
+              onClick={() => navigate('/admin/revenue')}
+              className="w-full text-center cursor-pointer text-blue-600 font-bold text-xs tracking-wider pt-6 mt-4 hover:text-blue-700 uppercase flex items-center justify-center gap-2"
+            >
+              VIEW FULL FINANCIAL REPORT
+              <Sparkles size={12} />
+            </button>
           </div>
 
           {/* Low Stock Alerts Card */}

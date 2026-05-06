@@ -16,6 +16,7 @@ import AdminProfilePage from './pages/AdminProfilePage';
 import AdminEditprofile from './pages/AdminEditprofile';
 import AdminUsers from './pages/AdminUsers';
 import AdminCategories from './pages/AdminCategories';
+import AdminRevenue from './pages/AdminRevenue';
 import ForgotPassword from './userAuth/ForgotPassword';
 import ResetPassword from './userAuth/ResetPassword';
 import UserEditProfile from './pages/UserEditprofile';
@@ -56,6 +57,7 @@ const App = () => {
         <Route path="/admin/editprofile" element={<AdminRoute><AdminEditprofile /></AdminRoute>} />
         <Route path="/admin/users" element={<AdminRoute><AdminUsers /></AdminRoute>} />
         <Route path="/admin/categories" element={<AdminRoute><AdminCategories /></AdminRoute>} />
+        <Route path="/admin/revenue" element={<AdminRoute><AdminRevenue /></AdminRoute>} />
 
         <Route path="/user/dashboard" element={<UserRoute><UserDashboard /></UserRoute>} />
         <Route path="/user/revenue" element={<UserRoute><UserRevenue /></UserRoute>} />
