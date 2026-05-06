@@ -18,7 +18,8 @@ import {
   Keyboard,
   Mouse,
   Headphones,
-  Sparkles
+  Sparkles,
+  Users
 } from 'lucide-react';
 
 const AdminDashboard = () => {
@@ -236,8 +237,8 @@ const AdminDashboard = () => {
             </div>
             
             <div className="space-y-4">
-              {revenueStats.revenuePerUser.length > 0 ? (
-                revenueStats.revenuePerUser.sort((a,b) => b.revenue - a.revenue).slice(0, 5).map((user, idx) => (
+              {revenueStats.revenuePerUser && revenueStats.revenuePerUser.length > 0 ? (
+                [...revenueStats.revenuePerUser].sort((a,b) => b.revenue - a.revenue).slice(0, 5).map((user, idx) => (
                   <div key={idx} className="flex items-center justify-between p-2 hover:bg-gray-50 rounded-lg transition-colors">
                     <div className="flex items-center gap-3">
                       <div className="w-8 h-8 rounded-full bg-[#E6EBE8] flex items-center justify-center text-[10px] font-bold text-[#092A1A]">

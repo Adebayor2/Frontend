@@ -138,7 +138,7 @@ const AdminRevenue = () => {
                       ) : stats.revenuePerUser.length === 0 ? (
                         <tr><td colSpan={3} className="px-6 py-8 text-center text-gray-500">No user data available.</td></tr>
                       ) : (
-                        stats.revenuePerUser.sort((a, b) => b.revenue - a.revenue).map((user, idx) => (
+                        [...stats.revenuePerUser].sort((a, b) => b.revenue - a.revenue).map((user, idx) => (
                           <tr key={idx} className="hover:bg-gray-50 transition-colors">
                             <td className="px-6 py-4">
                               <div className="flex items-center gap-3">
