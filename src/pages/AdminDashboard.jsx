@@ -73,6 +73,17 @@ const AdminDashboard = () => {
     fetchDashboardData();
   }, [navigate]);
 
+  if (loading) {
+    return (
+      <div className="flex min-h-screen bg-[#E6EBE8] items-center justify-center">
+        <div className="flex flex-col items-center gap-4">
+          <div className="w-12 h-12 border-4 border-[#092A1A] border-t-transparent rounded-full animate-spin"></div>
+          <p className="text-[#092A1A] font-bold animate-pulse uppercase tracking-widest text-xs">Synchronizing Intelligence...</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="flex min-h-screen bg-[#E6EBE8] font-sans">
       {isSidebarOpen && (
@@ -111,7 +122,7 @@ const AdminDashboard = () => {
             <h1 className="text-3xl font-bold text-[#0A2E1A] tracking-tight"><span className='text-red-500'>Admin</span> Dashboard</h1>
             <p className="text-gray-500 mt-1 text-sm">Real-time overview of your digital gallery.</p>
           </div>
-          {stats.lowStockProducts.length > 0 && (
+          {stats?.lowStockProducts?.length > 0 && (
             <div className="bg-red-100 border border-red-200 text-red-700 px-4 py-2 rounded-lg flex items-center animate-pulse">
               <AlertCircle size={18} className="mr-2" />
               <span className="text-sm font-bold uppercase tracking-tight">Warning: Low Stock Detected</span>
@@ -130,7 +141,7 @@ const AdminDashboard = () => {
                 <Package size={20} className="text-black" />
               </div>
               <p className="text-[10px] font-bold tracking-wider text-black mb-1">TOTAL PRODUCTS</p>
-              <h2 className="text-3xl font-bold text-black">{stats.productCount}</h2>
+              <h2 className="text-3xl font-bold text-black">{stats?.productCount || 0}</h2>
             </div>
             <div className="inline-flex items-center bg-black/20 rounded px-2 py-1 mt-4 max-w-fit">
               <Sparkles size={12} className="mr-1 text-black" />
@@ -146,7 +157,7 @@ const AdminDashboard = () => {
                 <ClipboardCheck size={20} className="text-white" />
               </div>
               <p className="text-[10px] font-bold tracking-wider text-green-100 mb-1">TOTAL STOCK</p>
-              <h2 className="text-3xl font-bold">{stats.totalStock}</h2>
+              <h2 className="text-3xl font-bold">{stats?.totalStock || 0}</h2>
             </div>
             <div className="inline-flex items-center bg-white/20 rounded px-2 py-1 mt-4 max-w-fit">
               <ShieldCheck size={12} className="mr-1" />
@@ -162,7 +173,7 @@ const AdminDashboard = () => {
                 <Banknote size={20} className="text-[#96D9C0]" />
               </div>
               <p className="text-[10px] font-bold tracking-wider text-green-100 mb-1 uppercase">Monthly Revenue</p>
-              <h2 className="text-3xl font-bold">${revenueStats.monthlyRevenue.toLocaleString()}</h2>
+              <h2 className="text-3xl font-bold">${(revenueStats?.monthlyRevenue || 0).toLocaleString()}</h2>
             </div>
             <div className="inline-flex items-center bg-white/20 rounded px-2 py-1 mt-4 max-w-fit">
               <TrendingUp size={12} className="mr-1 text-[#96D9C0]" />
@@ -178,11 +189,11 @@ const AdminDashboard = () => {
                 <AlertTriangle size={20} className="text-white" />
               </div>
               <p className="text-[10px] font-bold tracking-wider text-white mb-1 uppercase">Low Stock</p>
-              <h2 className="text-3xl font-bold">{stats.lowStockProducts.length}</h2>
+              <h2 className="text-3xl font-bold">{stats?.lowStockProducts?.length || 0}</h2>
             </div>
             <div className="inline-flex items-center bg-white/20 rounded px-2 py-1 mt-4 max-w-fit">
               <AlertCircle size={12} className="mr-1" />
-              <span className="text-xs font-medium">{stats.lowStockProducts.length > 0 ? 'Urgent attention needed' : 'All stock levels healthy'}</span>
+              <span className="text-xs font-medium">{(stats?.lowStockProducts?.length || 0) > 0 ? 'Urgent attention needed' : 'All stock levels healthy'}</span>
             </div>
           </div>
 
@@ -200,7 +211,7 @@ const AdminDashboard = () => {
               </div>
               
               <div className="space-y-5">
-                {stats.lowStockProducts.filter(p => p.stock === 0).length > 0 ? (
+                {(stats?.lowStockProducts || []).filter(p => p.stock === 0).length > 0 ? (
                   stats.lowStockProducts.filter(p => p.stock === 0).map((product, index) => (
                     <div key={index} className="flex items-center">
                       <div className="p-3 bg-red-50 rounded-lg text-red-400 mr-4">
@@ -249,7 +260,7 @@ const AdminDashboard = () => {
                         <p className="text-[10px] text-gray-400 font-medium">{user.salesCount} sales</p>
                       </div>
                     </div>
-                    <span className="text-sm font-extrabold text-[#092A1A]">${user.revenue.toLocaleString()}</span>
+                    <span className="text-sm font-extrabold text-[#092A1A]">${(user?.revenue || 0).toLocaleString()}</span>
                   </div>
                 ))
               ) : (
@@ -276,7 +287,7 @@ const AdminDashboard = () => {
             </div>
 
             <div className="space-y-4">
-              {stats.lowStockProducts.length > 0 ? (
+              {(stats?.lowStockProducts || []).length > 0 ? (
                 stats.lowStockProducts.map((product, index) => (
                   <div key={index}>
                     <div className="flex justify-between items-center mb-1.5">
@@ -300,7 +311,7 @@ const AdminDashboard = () => {
             </div>
 
             {/* Insight Box */}
-            {stats.lowStockProducts.length > 0 && (
+            {(stats?.lowStockProducts || []).length > 0 && (
               <div className="mt-6 bg-[#f4f7fb] border border-blue-100/50 rounded-lg p-4 flex items-start">
                 <Sparkles size={16} className="text-blue-500 mt-0.5 mr-3 flex-shrink-0" />
                 <p className="text-xs text-gray-600 leading-relaxed font-medium">

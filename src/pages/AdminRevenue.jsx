@@ -33,6 +33,17 @@ const AdminRevenue = () => {
     fetchStats();
   }, []);
 
+  if (loading) {
+    return (
+      <div className="flex min-h-screen bg-[#E6EBE8] items-center justify-center">
+        <div className="flex flex-col items-center gap-4">
+          <div className="w-12 h-12 border-4 border-[#092A1A] border-t-transparent rounded-full animate-spin"></div>
+          <p className="text-[#092A1A] font-bold animate-pulse uppercase tracking-widest text-xs">Generating Financial Report...</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="flex min-h-screen bg-[#E6EBE8] font-sans">
       {isSidebarOpen && (
@@ -82,7 +93,7 @@ const AdminRevenue = () => {
               </div>
               <div>
                 <p className="text-sm font-semibold text-gray-300 mb-1">Monthly Revenue</p>
-                <h2 className="text-3xl font-extrabold text-white">${stats.monthlyRevenue.toLocaleString()}</h2>
+                <h2 className="text-3xl font-extrabold text-white">${(stats?.monthlyRevenue || 0).toLocaleString()}</h2>
               </div>
             </div>
 
@@ -94,7 +105,7 @@ const AdminRevenue = () => {
               </div>
               <div>
                 <p className="text-sm font-semibold text-gray-500 mb-1">Total Lifetime Revenue</p>
-                <h2 className="text-3xl font-extrabold text-[#092A1A]">${stats.totalRevenue.toLocaleString()}</h2>
+                <h2 className="text-3xl font-extrabold text-[#092A1A]">${(stats?.totalRevenue || 0).toLocaleString()}</h2>
               </div>
             </div>
 
@@ -107,7 +118,7 @@ const AdminRevenue = () => {
               <div>
                 <p className="text-sm font-semibold text-gray-500 mb-1">Total Sales Count</p>
                 <h2 className="text-3xl font-extrabold text-[#092A1A]">
-                  {stats.totalSales.toLocaleString()}
+                  {(stats?.totalSales || 0).toLocaleString()}
                 </h2>
               </div>
             </div>
@@ -133,12 +144,10 @@ const AdminRevenue = () => {
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-gray-50">
-                      {loading ? (
-                        <tr><td colSpan={3} className="px-6 py-8 text-center text-gray-400">Analyzing data...</td></tr>
-                      ) : stats.revenuePerUser.length === 0 ? (
+                      {(stats?.revenuePerUser || []).length === 0 ? (
                         <tr><td colSpan={3} className="px-6 py-8 text-center text-gray-500">No user data available.</td></tr>
                       ) : (
-                        [...stats.revenuePerUser].sort((a, b) => b.revenue - a.revenue).map((user, idx) => (
+                        [...(stats?.revenuePerUser || [])].sort((a, b) => b.revenue - a.revenue).map((user, idx) => (
                           <tr key={idx} className="hover:bg-gray-50 transition-colors">
                             <td className="px-6 py-4">
                               <div className="flex items-center gap-3">
@@ -149,10 +158,10 @@ const AdminRevenue = () => {
                               </div>
                             </td>
                             <td className="px-6 py-4 text-sm text-gray-500 font-medium">
-                              {user.salesCount} transactions
+                              {user?.salesCount || 0} transactions
                             </td>
                             <td className="px-6 py-4 text-sm font-extrabold text-[#092A1A] text-right">
-                              ${user.revenue.toLocaleString()}
+                              ${(user?.revenue || 0).toLocaleString()}
                             </td>
                           </tr>
                         ))
@@ -170,22 +179,20 @@ const AdminRevenue = () => {
                   <h3 className="text-sm font-bold text-[#092A1A] uppercase tracking-wider">Recent Activity</h3>
                 </div>
                 <div className="p-6 space-y-6">
-                  {loading ? (
-                    <p className="text-xs text-gray-400 text-center">Loading feed...</p>
-                  ) : stats.recentSales.length === 0 ? (
+                  {(stats?.recentSales || []).length === 0 ? (
                     <p className="text-xs text-gray-400 text-center">No recent activity.</p>
                   ) : (
-                    stats.recentSales.map((sale, idx) => (
+                    (stats?.recentSales || []).map((sale, idx) => (
                       <div key={idx} className="flex gap-4 items-start pb-4 border-b border-gray-50 last:border-0 last:pb-0">
                         <div className="p-2 bg-[#E6EBE8] rounded-lg">
                           <ArrowUpRight size={14} className="text-[#5C8D73]" />
                         </div>
                         <div>
                           <p className="text-[11px] font-bold text-[#092A1A]">
-                            {sale.user?.firstName || 'User'} sold {sale.productName}
+                            {sale?.user?.firstName || 'User'} sold {sale?.productName || 'Product'}
                           </p>
                           <p className="text-[10px] text-gray-400 font-medium mt-0.5">
-                            {new Date(sale.date).toLocaleDateString()} • ${sale.price.toLocaleString()}
+                            {sale?.date ? new Date(sale.date).toLocaleDateString() : 'Unknown Date'} • ${(sale?.price || 0).toLocaleString()}
                           </p>
                         </div>
                       </div>
