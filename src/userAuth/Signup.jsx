@@ -19,13 +19,15 @@ const Signup = () => {
       password: ''
     },
     onSubmit: (values) =>{
-      console.log(values);
+      // console.log(values);
       setApiError('');
       setIsSubmitting(true);
       axios.post(`${API_BASE_URL}/register`, values)
       .then((response) => {
         console.log('signup success',response);
-        navigate('/signin')
+          setTimeout(() => {
+          navigate('/signin');
+        }, 500);
       })
       .catch((error) => {
         console.log('error signing up ' , error);
@@ -123,7 +125,7 @@ const Signup = () => {
                   className="w-full bg-[#f6f7f6] py-3.5 px-4 rounded-lg text-[14px] text-gray-900 focus:outline-none focus:ring-2 focus:ring-[#0A2E1A]/20 focus:bg-white transition-colors border border-transparent"
                   placeholder="First Name"
                 />
-                 {formik.touched.firstName ? <p className='text-red-500 text-sm'>
+                 {formik.touched.firstName ? <p className='text-red-500 bold text-sm'>
                         {formik.errors.firstName}</p> : ''}
               </div>
                     <div className="space-y-1.5">
@@ -138,7 +140,7 @@ const Signup = () => {
                   onBlur={formik.handleBlur}
                   className="w-full bg-[#f6f7f6] py-3.5 px-4 rounded-lg text-[14px] text-gray-900 focus:outline-none focus:ring-2 focus:ring-[#0A2E1A]/20 focus:bg-white transition-colors border border-transparent"
                   placeholder="Last Name"
-                /> {formik.touched.lastName ? <p className='text-red-500 text-sm '>
+                /> {formik.touched.lastName ? <p className='text-red-500 bold text-sm '>
                         {formik.errors.lastName}</p> : ''}
               </div>
 
@@ -153,8 +155,8 @@ const Signup = () => {
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
                   className="w-full bg-[#f6f7f6] py-3.5 px-4 rounded-lg text-[14px] text-gray-900 focus:outline-none focus:ring-2 focus:ring-[#0A2E1A]/20 focus:bg-white transition-colors border border-transparent"
-                  placeholder="j.wright@studio.com"
-                /> {formik.touched.email ? <p className='text-red-500 text-sm '>
+                  placeholder="yourEmail@gmail.com"
+                /> {formik.touched.email ? <p className='text-red-500 bold text-sm '>
                         {formik.errors.email}</p> : ''}
               </div>
 

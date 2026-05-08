@@ -31,11 +31,14 @@ const Signin = ({ updateAuth }) => {
                     
                     if (updateAuth) updateAuth();
                  
-
                     if (response.data.role === 'admin') {
+                      setTimeout(() => {
                         navigate('/admin/dashboard');
+                      }, 500);
                     } else {
+                      setTimeout(() => {
                         navigate('/user/dashboard');
+                      }, 500);
                     }
                 }
                 else{
@@ -45,8 +48,7 @@ const Signin = ({ updateAuth }) => {
             })
             .catch((error) => {
                 console.error('Login error detail:', error);
-                const backendError = error.response?.data?.error;
-                const msg = backendError || error.response?.data?.message || 'Error logging in';
+                const msg = error.response?.data?.message || 'Error logging in';
                 setApiError(String(msg));
             })
             .finally(() => {
@@ -62,7 +64,6 @@ const Signin = ({ updateAuth }) => {
   return (
     <div className="min-h-screen flex flex-col md:flex-row bg-white font-sans text-gray-900 selection:bg-green-100  ">
       
-      {/* Left Panel - Hero Branding */}
       <div className="w-full md:w-1/2 bg-[#092515] text-white p-8 md:p-12 lg:p-20 flex flex-col justify-between relative overflow-hidden min-h-[40vh] md:min-h-screen hidden md:flex ">
         <div className="relative z-20 ">
         
@@ -93,7 +94,7 @@ const Signin = ({ updateAuth }) => {
         </div>
 
         <div className="relative z-20 mt-16 md:mt-0 text-[13px] text-white/50 font-medium max-w-sm">
-          Architect Ledger ensures institutional-grade security for your financial and physical assets.
+          Stock Manager ensures institutional-grade security for your financial and physical assets.
         </div>
       </div>
 

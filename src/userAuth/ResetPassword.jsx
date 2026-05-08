@@ -37,7 +37,7 @@ const ResetPassword = () => {
         setMessage(response.data.message || 'Password reset successful!');
         setTimeout(() => {
           navigate('/signin');
-        }, 3000);
+        }, 1000);
       } catch (err) {
         setError(err.response?.data?.message || 'Something went wrong or the link expired.');
       } finally {

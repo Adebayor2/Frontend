@@ -26,7 +26,7 @@ const ForgotPassword = () => {
       try {
         // Placeholder for API call
         const response = await axios.post(`${API_BASE_URL}/forgotpassword`, values);
-        setMessage(response.data.message || 'If an account exists with this email, you will receive a reset link shortly.');
+        setMessage(response.data.message || 'Reset link sent to your email');
       } catch (err) {
         setError(err.response?.data?.message || 'Something went wrong. Please try again.');
       } finally {

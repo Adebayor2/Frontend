@@ -18,10 +18,11 @@ import AdminUsers from './pages/AdminUsers';
 import AdminCategories from './pages/AdminCategories';
 import AdminRevenue from './pages/AdminRevenue';
 import ForgotPassword from './userAuth/ForgotPassword';
-import ResetPassword from './userAuth/ResetPassword';
+
 import UserEditProfile from './pages/UserEditprofile';
 import Loader from './component/Loader';
 import Settings from './pages/Settings';
+import ResetPassword from './userAuth/ResetPassword';
 
 
 
@@ -68,7 +69,7 @@ const App = () => {
         <Route path="/user/settings" element={<UserRoute><Settings /></UserRoute>} />
         
         <Route path="/forgot-password" element={<ForgotPassword />} />
-        <Route path="/reset-password/:resetToken" element={<ResetPassword />} />
+        <Route path="/reset-password" element={<ResetPassword  />} />
         <Route path='/*' element={<NotFound />} />
       </Routes>
   
