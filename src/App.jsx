@@ -11,7 +11,6 @@ import NotFound from './pages/NotFound';
 import AdminProducts from './pages/AdminProducts';
 import UserDashboard from './pages/UserDashboard';
 import UserRevenue from './pages/UserRevenue';
-import UserProfilePage from './pages/UserProfilePage';
 import AdminProfilePage from './pages/AdminProfilePage';
 import AdminEditprofile from './pages/AdminEditprofile';
 import AdminUsers from './pages/AdminUsers';
@@ -20,7 +19,6 @@ import AdminRevenue from './pages/AdminRevenue';
 import ForgotPassword from './userAuth/ForgotPassword';
 
 import UserEditProfile from './pages/UserEditprofile';
-import Loader from './component/Loader';
 import Settings from './pages/Settings';
 import ResetPassword from './userAuth/ResetPassword';
 
