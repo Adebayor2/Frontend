@@ -69,7 +69,7 @@ const App = () => {
         <Route path="/user/settings" element={<UserRoute><Settings /></UserRoute>} />
         
         <Route path="/forgot-password" element={<ForgotPassword />} />
-        <Route path="/reset-password" element={<ResetPassword  />} />
+        <Route path="/reset-password/:resetToken" element={<ResetPassword  />} />
         <Route path='/*' element={<NotFound />} />
       </Routes>
   
