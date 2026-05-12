@@ -79,7 +79,7 @@ const UserSidebar = ({ isOpen, toggleSidebar }) => {
 
       {/* Profile Info & Logout */}
       <div className="p-6 pb-8 border-t border-gray-700/50 flex flex-col gap-4">
-        <Link to='/user/profilePage' className={`flex items-center transition-colors ${isActive('/user/profile') ? 'text-white' : 'text-gray-400 hover:text-white'}`}>
+        <Link to='/user/profilePage' className={`flex items-center transition-colors ${isActive('/user/profilePage') ? 'text-white' : 'text-gray-400 hover:text-white'}`}>
           <UserCircle size={20} className="mr-4" />
           <span className="text-xs font-bold tracking-wider">PROFILE</span>
         </Link>

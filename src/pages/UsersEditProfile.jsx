@@ -4,7 +4,7 @@ import { Menu, UserCircle, Mail, MapPin, Phone, Save, Shield } from 'lucide-reac
 import axios from 'axios';
 import API_BASE_URL from '../config/apiConfig';
 
-const UserEditProfile = () => {
+const UsersEditProfile = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [loading, setLoading] = useState(true);
   const [profileData, setProfileData] = useState({
@@ -12,7 +12,8 @@ const UserEditProfile = () => {
     lastName: '',
     email: '',
     phone: '',
-    address: ''
+    address: '',
+    role: ''
   });
 
   useEffect(() => {
@@ -29,10 +30,12 @@ const UserEditProfile = () => {
         if (res.status === 200) {
           setProfileData(prev => ({
             ...prev,
-            firstName: res.data.user.firstName,
-            lastName: res.data.user.lastName,
-            email: res.data.user.email,
-            role: res.data.user.role
+            firstName: res.data.user.firstName || '',
+            lastName: res.data.user.lastName || '',
+            email: res.data.user.email || '',
+            phone: res.data.user.phone || '',
+            address: res.data.user.address || '',
+            role: res.data.user.role || ''
           }));
         }
       } catch (error) {
@@ -42,7 +45,8 @@ const UserEditProfile = () => {
           lastName: '',
           email: '',
           phone: '',
-          address: ''
+          address: '',
+          role: ''
         });
       } finally {
         setLoading(false);
@@ -124,7 +128,7 @@ const UserEditProfile = () => {
             <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
               <div className="bg-[#092A1A] h-32 relative">
                 <div className="absolute -bottom-12 left-8 w-24 h-24 rounded-full border-4 border-white bg-[#96D9C0] flex items-center justify-center text-4xl font-bold text-[#092A1A] shadow-md">
-                  {profileData.firstName.charAt(0).toUpperCase()}
+                  {profileData.firstName ? profileData.firstName.charAt(0).toUpperCase() : 'U'}
                 </div>
               </div>
               
@@ -219,4 +223,4 @@ const UserEditProfile = () => {
   );
 };
 
-export default UserEditProfile;
+export default UsersEditProfile;

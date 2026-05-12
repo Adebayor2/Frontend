@@ -18,9 +18,11 @@ import AdminCategories from './pages/AdminCategories';
 import AdminRevenue from './pages/AdminRevenue';
 import ForgotPassword from './userAuth/ForgotPassword';
 
-import UserEditProfile from './pages/UserEditprofile';
 import Settings from './pages/Settings';
 import ResetPassword from './userAuth/ResetPassword';
+import UsersEditProfile from './pages/UsersEditProfile';
+import UsersProfilePage from './pages/UsersProfilePage';
+
 
 
 
@@ -62,8 +64,8 @@ const App = () => {
 
         <Route path="/user/dashboard" element={<UserRoute><UserDashboard /></UserRoute>} />
         <Route path="/user/revenue" element={<UserRoute><UserRevenue /></UserRoute>} />
-        <Route path="/user/editprofile" element={<UserRoute><UserEditProfile /></UserRoute>} />
-        <Route path="/user/profilePage" element={<UserRoute><UserProfilePage /></UserRoute>} />
+        <Route path="/user/editprofile" element={<UserRoute><UsersEditProfile /></UserRoute>} />
+        <Route path="/user/profilePage" element={<UserRoute><UsersProfilePage /></UserRoute>} />
         <Route path="/user/settings" element={<UserRoute><Settings /></UserRoute>} />
         
         <Route path="/forgot-password" element={<ForgotPassword />} />
