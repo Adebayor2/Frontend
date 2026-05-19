@@ -145,7 +145,7 @@ const ForgotPassword = () => {
 
           <div className="mt-12 text-center">
             <p className="text-xs font-medium text-gray-400">
-              Still having trouble? <Link to="/support" className="text-[#0A2E1A] font-bold hover:underline">Contact Support</Link>
+              Still having trouble? <Link to="#" className="text-[#0A2E1A] font-bold hover:underline">Contact Support</Link>
             </p>
           </div>
         </div>
